@@ -3,6 +3,7 @@ import '../styles/globals.css';
 import Link from 'next/link';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
+//TODO: add formatting action in git
 function HowsTheWater({ Component, pageProps }) {
     const linkStyle = "mr-6 cursor-pointer font-bold text-blue-500 hover:text-blue-700";
 
