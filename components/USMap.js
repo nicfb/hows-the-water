@@ -5,7 +5,7 @@ import USAMap from 'react-usa-map';
 export default function Map() {
     const router = useRouter();
     const mapHandler = (event) => {
-        router.push('/states/' + event.target.dataset.name.toLowerCase());
+        router.push('/map/' + event.target.dataset.name.toLowerCase());
     };
 
     return (
