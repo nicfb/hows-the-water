@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/globals.css';
 import Link from 'next/link';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 function HowsTheWater({ Component, pageProps }) {
     const linkStyle = "mr-6 cursor-pointer font-bold text-blue-500 hover:text-blue-700";

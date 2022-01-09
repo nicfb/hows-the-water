@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import MapContainer from './MapContainer';
 
-export default function USGSMap() {
-    const router = useRouter();
-    const { state } = router.query;
+export default function USGSMap({state}) {
     const [sites, setSites] = useState([]);
     const [lat, setLat] = useState();
     const [lng, setLng] = useState(0);
@@ -12,8 +9,6 @@ export default function USGSMap() {
     //TODO: improve map dragging performance
     //TODO: use async/await
     useEffect(() => {
-        if (!router.isReady) return;
-
         //find center of all markers to center viewport
         const getCenter = (sites) => {
             if (sites === null) {
@@ -68,7 +63,7 @@ export default function USGSMap() {
             setLat(center[0]);
             setLng(center[1]);
         });
-    }, [state, router.isReady]);
+    }, [state]);
     
     return (
         <MapContainer lat={lat} lng={lng} markers={sites} />

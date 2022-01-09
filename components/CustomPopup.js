@@ -8,7 +8,6 @@ export default function CustomPopup({idx, lat, lng, site, closePopup}) {
     const favorite = () => {
         console.log(`added ${site.name} (${site.num}) to favorites`);
         site.favorite = !site.favorite;
-        console.log(state);
     };
 
     return (
