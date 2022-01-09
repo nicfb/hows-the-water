@@ -3,8 +3,6 @@ import MapGL, {Marker, Popup} from "react-map-gl";
 import CustomMarker from "./CustomMarker";
 import CustomPopup from "./CustomPopup";
 
-//TODO: I don't think this should be re-rendered each time the viewport changes...
-//      (related to the dragging poor dragging performance)
 export default function MapContainer({lat, lng, markers, addMarker}) {
   const [selectedSite, setSelectedSite] = useState('');
   const [viewport, setViewport] = useState({});
@@ -72,7 +70,9 @@ export default function MapContainer({lat, lng, markers, addMarker}) {
       onDblClick={showAddMarkerPopup}
       doubleClickZoom={false}
     >
-      {memoizedMarkers}
+      {
+        memoizedMarkers
+      }
       {
         selectedSite !== '' &&
         <CustomPopup
