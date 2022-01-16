@@ -25,7 +25,7 @@ export default function SiteDetails() {
     const [data, setData] = useState([]);
 
     const processData = (readings) => {
-        //parse reading into struct
+        //parse reading into struct for graph
         return readings.map(v => ({
             time: moment(v.dateTime).format("MMM DD HH:mm"),
             value: v.value
@@ -33,11 +33,11 @@ export default function SiteDetails() {
     }
 
     const handlePeriodChange = (e) => {
-        setPeriod(e.target.value);
+        let period = e.target.value;
+        setPeriod(period);
         
-        if (period !== "" && paramCode !== "") {
-            let url = `https://waterservices.usgs.gov/nwis/iv/?sites=${site}&period=${e.target.value}&parameterCd=${paramCode}&format=json`;
-            fetch(url)
+        if (paramCode) {
+            fetch(`https://waterservices.usgs.gov/nwis/iv/?sites=${site}&period=${period}&parameterCd=${paramCode}&format=json`)
             .then(response => response.json())
             .then(json => {
                 if (json.value.timeSeries.length > 0) {
@@ -50,11 +50,12 @@ export default function SiteDetails() {
     }
 
     const handleParameterCodeChange = (e) => {
+        let param = e.target.value;
+        setParamCode(param);
         setParam(e.target.options[e.target.selectedIndex].text);
-        setParamCode(e.target.value);
-
-        if (paramCode !== "" && period !== "") {
-            fetch(`https://waterservices.usgs.gov/nwis/iv/?sites=${site}&period=${period}&parameterCd=${paramCode}&format=json`)
+        
+        if (period) {
+            fetch(`https://waterservices.usgs.gov/nwis/iv/?sites=${site}&period=${period}&parameterCd=${param}&format=json`)
             .then(response => response.json())
             .then(json => {
                 if (json.value.timeSeries.length > 0) {
@@ -91,48 +92,27 @@ export default function SiteDetails() {
     const domain = findDomain(data);
     
     return (
-        //TODO: clean up this logic, seems a bit convoluted
-        //TODO: add loading indicator for parameters
         <>
-            {
-            data.length === 0
-            ?
-            paramCodeDisabled || paramCode === ""
-            ?
-            <div className="m-8 flex justify-center">
-                <div className="flex flex-col">
-                    <PeriodDropDown handlePeriodChange={handlePeriodChange} selectedValue={period} />
-                    <ParameterCodeDropDown
-                        site={site}
-                        handleParameterCodeChange={handleParameterCodeChange}
-                        selectedValue={paramCode}
-                        disabled={paramCodeDisabled} />
-                </div>
-            </div>
-            :
-            <div className="m-8 flex justify-center">
-                <div className="flex flex-col">
-                    <PeriodDropDown handlePeriodChange={handlePeriodChange} selectedValue={period} />
-                    <ParameterCodeDropDown
-                        site={site}
-                        handleParameterCodeChange={handleParameterCodeChange}
-                        selectedValue={paramCode}
-                        disabled={paramCodeDisabled} />
-                    <span className="text-center mt-36 text-xl opacity-50">No data available.</span>
-                </div>
-            </div>
-            :
-            <div>
-                <div className="m-8 flex justify-center">
-                    <div className="flex flex-col">
-                        <PeriodDropDown handlePeriodChange={handlePeriodChange} selectedValue={period} />
+            <div className='m-8 flex justify-center'>
+                <div className='flex flex-col'>
+                    <PeriodDropDown
+                        handlePeriodChange={handlePeriodChange}
+                        selectedValue={period} />
+                    {
+                        !paramCodeDisabled
+                        ?
                         <ParameterCodeDropDown
                             site={site}
                             handleParameterCodeChange={handleParameterCodeChange}
-                            selectedValue={paramCode}
-                            disabled={false} />
-                    </div>
+                            selectedValue={paramCode} />
+                        :
+                        null
+                    }
                 </div>
+            </div>
+            {
+                data.length != 0
+                ?
                 <div className="flex justify-center">
                     <ResponsiveContainer width="95%" height={550}>
                         <LineChart data={readings}>
@@ -145,7 +125,8 @@ export default function SiteDetails() {
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
-            </div>
+                :
+                null
             }
         </>
     )

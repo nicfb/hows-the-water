@@ -20,7 +20,7 @@ class ParameterCodeDropDown extends React.Component {
     }
 
     componentDidMount() {
-        if (this.state.site === "") return;
+        if (!this.state.site) return;
         
         fetch(`https://waterservices.usgs.gov/nwis/iv/?sites=${this.state.site}&period=P7D&siteStatus=all&format=json`)
         .then(response => response.json())
@@ -43,7 +43,7 @@ class ParameterCodeDropDown extends React.Component {
     }
 
     render() {
-        var {isLoaded, parameterCodes, selectedValue} = this.state;
+        var {isLoaded, parameterCodes} = this.state;
 
         if (!isLoaded) {
             return (
@@ -64,8 +64,7 @@ class ParameterCodeDropDown extends React.Component {
                                         fillRule="nonzero" />
                         </svg>
                         <select onChange={this.props.handleParameterCodeChange}
-                                value={selectedValue}
-                                disabled={this.props.disabled}
+                                value={this.props.selectedValue}
                                 className="border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none">
                         <option value=''>Parameter Code</option>
                             {parameterCodes.map((param, i) => (
