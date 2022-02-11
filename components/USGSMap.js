@@ -3,8 +3,7 @@ import MapContainer from './MapContainer';
 
 export default function USGSMap({state}) {
     const [sites, setSites] = useState([]);
-    const [lat, setLat] = useState();
-    const [lng, setLng] = useState(0);
+    const [latLng, setLatLng] = useState([]);
 
     //TODO: improve map dragging performance
     //TODO: use async/await
@@ -60,12 +59,13 @@ export default function USGSMap({state}) {
             });
             setSites(sites);
             let center = getCenter(sites);
-            setLat(center[0]);
-            setLng(center[1]);
+            setLatLng([center[0], center[1]]);
         });
     }, [state]);
     
     return (
-        <MapContainer lat={lat} lng={lng} markers={sites} />
+        <>
+            <MapContainer latLng={latLng} markers={sites} />
+        </>
     )
 }
