@@ -24,14 +24,6 @@ export default function SiteDetails() {
     const [period, setPeriod] = useState('');
     const [data, setData] = useState([]);
 
-    const processData = (readings) => {
-        //parse reading into struct for graph
-        return readings.map(v => ({
-            time: moment(v.dateTime).format("MMM DD HH:mm"),
-            value: v.value
-        }));
-    }
-
     const handlePeriodChange = (e) => {
         let period = e.target.value;
         setPeriod(period);
@@ -67,13 +59,20 @@ export default function SiteDetails() {
         }
     }
 
+    const processData = (readings) => {
+        //parse reading into struct for graph
+        return readings.map(v => ({
+            time: moment(v.dateTime).format("MMM DD HH:mm"),
+            value: v.value
+        }));
+    }
+
     const findDomain = (data) => {
         const minY = 0;
         const maxY = 0;
         
         //find min/max y value to center graph
-        if (data.length > 0)
-        {
+        if (data.length > 0) {
             const numData = data.map(v => parseInt(v.value));
             maxY = numData.reduce(function(prev, current) {
                 return (prev > current ? prev : current);
@@ -87,7 +86,7 @@ export default function SiteDetails() {
         return [minY, maxY];
     }
 
-    const paramCodeDisabled = (period === "");
+    const paramCodeEnabled = (period !== "");
     const readings = processData(data);
     const domain = findDomain(data);
     
@@ -99,7 +98,7 @@ export default function SiteDetails() {
                         handlePeriodChange={handlePeriodChange}
                         selectedValue={period} />
                     {
-                        !paramCodeDisabled
+                        paramCodeEnabled
                         ?
                         <ParameterCodeDropDown
                             site={site}
@@ -111,7 +110,7 @@ export default function SiteDetails() {
                 </div>
             </div>
             {
-                data.length != 0
+                data.length != 0 && paramCode
                 ?
                 <div className="flex justify-center">
                     <ResponsiveContainer width="95%" height={550}>
@@ -126,7 +125,7 @@ export default function SiteDetails() {
                     </ResponsiveContainer>
                 </div>
                 :
-                null
+                paramCode ? <div className="flex justify-center">No data available.</div> : null
             }
         </>
     )

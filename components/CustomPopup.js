@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useRouter } from 'next/router';
 import { Popup } from "react-map-gl";
 
-export default function CustomPopup({idx, lat, lng, site, closePopup}) {
+export default function CustomPopup({site, closePopup}) {
     const router = useRouter();
 
     const favorite = () => {
@@ -12,9 +12,9 @@ export default function CustomPopup({idx, lat, lng, site, closePopup}) {
 
     return (
         <Popup
-            key={`popup-${idx}`}
-            latitude={lat}
-            longitude={lng}
+            key={`popup-${site.num}`}
+            latitude={site.lat}
+            longitude={site.lng}
             dynamicPosition={true}
             onClose={closePopup}
             closeButton={true}

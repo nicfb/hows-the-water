@@ -8,7 +8,7 @@ export default function CustomMarker({idx, site, openPopup}) {
             key={idx}
             latitude={site.lat}
             longitude={site.lng}>
-            <svg viewBox="-8 0 55 65" height="20" onClick={() => openPopup(idx)}>
+            <svg viewBox="-8 0 55 65" height="20" onClick={() => openPopup(site.num)}>
               <path d={markerIcon} fill="white" />
             </svg>
         </Marker>
