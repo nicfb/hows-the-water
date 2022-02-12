@@ -4,7 +4,7 @@ import CustomMarker from "./CustomMarker";
 import CustomPopup from "./CustomPopup";
 
 export default function MapContainer({latLng, markers, addMarker}) {
-  const [selectedSite, setSelectedSite] = useState('');
+  const [selectedSite, setSelectedSite] = useState(null);
   const [viewport, setViewport] = useState({});
   const [newMarker, setNewMarker]  = useState(null);
   const [newMarkerName, setNewMarkerName] = useState('');
@@ -19,11 +19,12 @@ export default function MapContainer({latLng, markers, addMarker}) {
   }, [latLng]);
 
   const closePopup = () => {
-    setSelectedSite('');
+    setSelectedSite(null);
   };
 
-  const openPopup = (idx) => {
-    setSelectedSite(idx);
+  const openPopup = (siteNum) => {
+    const selected = markers.find(s => s.num == siteNum);
+    setSelectedSite(selected);
   }
 
   const closeNewMarkerPopup = () => {
@@ -31,7 +32,7 @@ export default function MapContainer({latLng, markers, addMarker}) {
   }
 
   const clearAllMarkers = () => {
-    setSelectedSite('');
+    setSelectedSite(null);
     setNewMarker(null);
   }
 
@@ -81,13 +82,11 @@ export default function MapContainer({latLng, markers, addMarker}) {
           memoizedMarkers
         }
         {
-          selectedSite !== '' &&
-          <CustomPopup
-            idx={selectedSite}
-            lat={markers[selectedSite].lat}
-            lng={markers[selectedSite].lng}
-            site={markers[selectedSite]}
-            closePopup={closePopup} />
+          selectedSite
+          ?
+            <CustomPopup site={selectedSite} closePopup={closePopup} />
+          :
+          null
         }
         {
           newMarker ? (
