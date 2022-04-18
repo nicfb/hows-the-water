@@ -22,12 +22,12 @@ export default function USGSMap({state}) {
             let z = 0;
     
             for (let i = 0; i < sites.length; i++) {
-                let lati = sites[i].lat * Math.PI / 180;
+                let lat = sites[i].lat * Math.PI / 180;
                 let long = sites[i].lng * Math.PI / 180;
     
-                x += Math.cos(lati) * Math.cos(long);
-                y += Math.cos(lati) * Math.sin(long);
-                z += Math.sin(lati);
+                x += Math.cos(lat) * Math.cos(long);
+                y += Math.cos(lat) * Math.sin(long);
+                z += Math.sin(lat);
             }
     
             x /= sites.length;

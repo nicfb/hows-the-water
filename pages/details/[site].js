@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import {
@@ -13,6 +13,7 @@ import {
   } from 'recharts'
 import ParameterCodeDropDown from '../../components/ParameterCodeDropDown';
 import PeriodDropDown from '../../components/PeriodDropDown';
+import { PropagateLoader } from 'react-spinners';
 
 //TODO: set api endpoint higher up somewhere
 export default function SiteDetails() {
@@ -23,12 +24,30 @@ export default function SiteDetails() {
     const [paramCode, setParamCode] = useState('');
     const [period, setPeriod] = useState('');
     const [data, setData] = useState([]);
+    const [siteName, setSiteName] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        setIsLoading(true);
+        //set page title with site information
+        fetch(`https://waterservices.usgs.gov/nwis/iv/?sites=${site}&format=json`)
+        .then(response => response.json())
+        .then(json => {
+            if (json.value.timeSeries.length > 0) {
+                setSiteName(json.value.timeSeries[0].sourceInfo.siteName);
+            } else {
+                setSiteName('');
+            }
+            setIsLoading(false);
+        });
+    }, [site])
 
     const handlePeriodChange = (e) => {
         let period = e.target.value;
         setPeriod(period);
         
         if (paramCode) {
+            setIsLoading(true);
             fetch(`https://waterservices.usgs.gov/nwis/iv/?sites=${site}&period=${period}&parameterCd=${paramCode}&format=json`)
             .then(response => response.json())
             .then(json => {
@@ -37,6 +56,7 @@ export default function SiteDetails() {
                 } else {
                     setData([]);
                 }
+                setIsLoading(false);
             });
         }
     }
@@ -47,6 +67,7 @@ export default function SiteDetails() {
         setParam(e.target.options[e.target.selectedIndex].text);
         
         if (period) {
+            setIsLoading(true);
             fetch(`https://waterservices.usgs.gov/nwis/iv/?sites=${site}&period=${period}&parameterCd=${param}&format=json`)
             .then(response => response.json())
             .then(json => {
@@ -55,6 +76,7 @@ export default function SiteDetails() {
                 } else {
                     setData([]);
                 }
+                setIsLoading(false);
             });
         }
     }
@@ -92,18 +114,17 @@ export default function SiteDetails() {
     
     return (
         <>
+            <h2 className='flex justify-center text-center mt-5 font-mono font-bold'>{siteName}</h2>
             <div className='m-8 flex justify-center'>
                 <div className='flex flex-col'>
-                    <PeriodDropDown
-                        handlePeriodChange={handlePeriodChange}
-                        selectedValue={period} />
+                    <PeriodDropDown handlePeriodChange={handlePeriodChange}
+                                    selectedValue={period} />
                     {
                         paramCodeEnabled
                         ?
-                        <ParameterCodeDropDown
-                            site={site}
-                            handleParameterCodeChange={handleParameterCodeChange}
-                            selectedValue={paramCode} />
+                        <ParameterCodeDropDown site={site}
+                                               handleParameterCodeChange={handleParameterCodeChange}
+                                               selectedValue={paramCode} />
                         :
                         null
                     }
@@ -125,7 +146,20 @@ export default function SiteDetails() {
                     </ResponsiveContainer>
                 </div>
                 :
-                paramCode ? <div className="flex justify-center">No data available.</div> : null
+                data.length == 0 && paramCode && !isLoading
+                ?
+                <div className="flex justify-center">No data available.</div>
+                :
+                null
+            }
+            {
+                isLoading
+                ?
+                <div className='flex justify-center mt-10 mb-10'>
+                    <PropagateLoader />
+                </div>
+                :
+                null
             }
         </>
     )
