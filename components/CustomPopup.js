@@ -11,15 +11,14 @@ export default function CustomPopup({site, closePopup}) {
     };
 
     return (
-        <Popup
-            key={`popup-${site.num}`}
-            latitude={site.lat}
-            longitude={site.lng}
-            dynamicPosition={true}
-            onClose={closePopup}
-            closeButton={true}
-            closeOnClick={false}
-            anchor="bottom">
+        <Popup key={`popup-${site.num}`}
+               latitude={site.lat}
+               longitude={site.lng}
+               dynamicPosition={true}
+               onClose={closePopup}
+               closeButton={true}
+               closeOnClick={false}
+               anchor="bottom">
             <svg xmlns="http://www.w3.org/2000/svg"
                  className="h-6 w-6"
                  fill={site.favorite ? "red" : "white"}
