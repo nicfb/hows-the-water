@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useMemo} from "react";
+import React, {useState, useEffect, useMemo} from "react";
 import MapGL, {Marker, Popup} from "react-map-gl";
 import CustomMarker from "./CustomMarker";
 import CustomPopup from "./CustomPopup";
@@ -80,6 +80,7 @@ export default function MapContainer({latLng, markers}) {
         {
           newMarker ? (
             <>
+              {/* todo: change color to red if this site has been favorited */}
               <Marker latitude={newMarker.lat} 
                       longitude={newMarker.lng}>
                 <svg viewBox="-8 0 55 65" height="20">

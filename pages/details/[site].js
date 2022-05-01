@@ -131,6 +131,15 @@ export default function SiteDetails() {
                 </div>
             </div>
             {
+                isLoading
+                ?
+                <div className='flex justify-center mt-10 mb-10'>
+                    <PropagateLoader />
+                </div>
+                :
+                null
+            }
+            {
                 data.length != 0 && paramCode
                 ?
                 <div className="flex justify-center">
@@ -149,15 +158,6 @@ export default function SiteDetails() {
                 data.length == 0 && paramCode && !isLoading
                 ?
                 <div className="flex justify-center">No data available.</div>
-                :
-                null
-            }
-            {
-                isLoading
-                ?
-                <div className='flex justify-center mt-10 mb-10'>
-                    <PropagateLoader />
-                </div>
                 :
                 null
             }

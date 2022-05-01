@@ -1,12 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useRouter } from 'next/router';
 import { Popup } from "react-map-gl";
+import { FavoritesContext } from '../components/Context';
 
 export default function CustomPopup({site, closePopup}) {
     const router = useRouter();
+    const { favoriteSites, setFavoriteSites } = useContext(FavoritesContext);
 
     const favorite = () => {
-        console.log(`added ${site.name} (${site.num}) to favorites`);
+        //todo: check context to see if this site is favorited
+        setFavoriteSites([...favoriteSites, site]);
         site.favorite = !site.favorite;
     };
 
