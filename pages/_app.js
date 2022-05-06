@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/globals.css';
 import Link from 'next/link';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -8,6 +8,18 @@ import { FavoritesContext } from '../components/Context';
 function HowsTheWater({ Component, pageProps }) {
     const linkStyle = "mr-6 cursor-pointer font-bold text-blue-500 hover:text-blue-700";
     const [favoriteSites, setFavoriteSites] = useState([]);
+
+    useEffect(() => {
+        const favorites = localStorage.getItem("favorites");
+        if (favorites) {
+            setFavoriteSites(JSON.parse(favorites));
+        }
+    }, [])
+
+    useEffect(() => {
+        const json = JSON.stringify(favoriteSites);
+        localStorage.setItem("favorites", json);
+    }, [favoriteSites])
 
     return (
     <>
