@@ -16,7 +16,7 @@ class ParameterCodeDropDown extends React.Component {
     //some parameter descriptions from USGS are very long
     //this prevents them from making the dropdown too wide
     trimString = (text, length) => {
-        return text.substring(0, length) + "...";
+        return text.substring(0, length) + "....";
     }
 
     componentDidMount() {
