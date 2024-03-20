@@ -76,7 +76,7 @@ jobs:
       - name: Build with Next.js
         run: |
           touch .env.local
-          echo NEXT_PUBLIC_MAPBOX_API_KEY+${{ secrets.NEXT_PUBLIC_MAPBOX_API_KEY }} >> .env.local
+          echo NEXT_PUBLIC_MAPBOX_API_KEY=${{ secrets.NEXT_PUBLIC_MAPBOX_API_KEY }} >> .env.local
           ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Static HTML export with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next export
